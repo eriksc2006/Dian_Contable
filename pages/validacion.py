@@ -13,7 +13,7 @@ from ui_state import invoices_dataframe, set_step
 
 
 def render() -> None:
-    st.title("7. Validación final")
+    st.title("6. Validación final")
     st.write(
         "Comprobación manual de valores y marca de tipo de operación para la conciliación: "
         "**1** = transacciones del día · **4** = transferencia única."

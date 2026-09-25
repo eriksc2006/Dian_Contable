@@ -21,7 +21,7 @@ HITL_STATUSES = {
 
 
 def render() -> None:
-    st.title("6. Revisión humana (HITL)")
+    st.title("5. Revisión humana (HITL)")
     st.write(
         "Solo se muestran facturas en **REQUIERE_REVISION**, **ERROR** o **NO_ENCONTRADA**. "
         "El contador puede aprobar, corregir, rechazar u omitir. Cada acción queda en auditoría."

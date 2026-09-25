@@ -35,10 +35,10 @@ PIPELINE_STEPS = [
     ("procesar", "2. Procesar facturas"),
     ("cuentas", "Plan de cuentas automático"),
     ("clasificar", "3. Clasificar facturas"),
-    ("archivo_plano", "4. Generar archivo plano"),
-    ("software_contable", "5. Software contable"),
-    ("hitl", "6. Revisión humana (HITL)"),
-    ("validacion", "7. Validación final"),
+    ("software_contable", "4. Software contable"),
+    ("hitl", "5. Revisión humana (HITL)"),
+    ("validacion", "6. Validación final"),
+    ("archivo_plano", "7. Generar archivo plano"),
 ]
 
 CONFIDENCE_WEIGHTS = {

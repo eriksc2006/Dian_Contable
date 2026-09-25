@@ -8,7 +8,12 @@ import pytest
 
 from core.models import AccountType, InvoiceRecord, InvoiceStatus, NaturalezaCuenta, TipoReporte
 from services.classification_service import accounts_from_dataframe, classify_invoices
-from services.matching_service import index_software_rows, match_invoices, software_base_is_zero
+from services.matching_service import (
+    index_software_rows,
+    match_invoices,
+    search_software_rows,
+    software_base_is_zero,
+)
 from services.confidence_service import (
     decide_status,
     detect_critical,
@@ -55,7 +60,8 @@ def test_confidence_weights_sum_to_one():
 def test_linear_page_navigation_neighbors():
     assert page_neighbors("cargar_dian") == (None, "procesar")
     assert page_neighbors("procesar") == ("cargar_dian", "clasificar")
-    assert page_neighbors("validacion") == ("hitl", None)
+    assert page_neighbors("validacion") == ("hitl", "txt")
+    assert page_neighbors("txt") == ("validacion", None)
     assert "cuentas" not in FLOW_KEYS
 
 
@@ -270,3 +276,16 @@ def test_matching_uses_exact_invoice_row_and_requires_zero_software_base():
     zero_base_result = match_invoices([invoice], classifications, rows)[0]
     assert zero_base_result.encontrada
     assert zero_base_result.software_row["documento"] == invoice.numero_factura
+
+
+def test_search_software_rows_checks_every_column_and_numeric_zero():
+    rows = [
+        {"documento": "FAC-001", "Tercero": "Comercial Alfa", "Base": 0.0},
+        {"documento": "FAC-002", "Tercero": "Distribuciones Beta", "Base": 1250},
+        {"documento": "FAC-003", "Tercero": None, "Base": float("nan")},
+    ]
+
+    assert search_software_rows(rows, "beta") == [rows[1]]
+    assert search_software_rows(rows, "1250") == [rows[1]]
+    assert search_software_rows(rows, "0.0") == [rows[0]]
+    assert search_software_rows(rows, "") == rows

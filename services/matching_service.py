@@ -52,6 +52,22 @@ def software_base_is_zero(row: dict) -> bool:
         return False
 
 
+def search_software_rows(rows: list[dict], query: str) -> list[dict]:
+    normalized_query = normalize_text(query)
+    if not normalized_query:
+        return list(rows)
+
+    matches = []
+    for row in rows:
+        for value in row.values():
+            if value is None or pd.isna(value):
+                continue
+            if normalized_query in normalize_text(str(value)):
+                matches.append(row)
+                break
+    return matches
+
+
 def match_invoices(
     invoices: list[InvoiceRecord],
     classifications: dict[str, ClassificationResult],

@@ -10,6 +10,7 @@ from services.excel_service import read_tabular
 from services.matching_service import (
     index_software_rows,
     match_invoices,
+    search_software_rows,
     software_base_value,
 )
 from services.txt_service import parse_plantilla_text
@@ -19,7 +20,7 @@ from utils.strings import normalize_text
 
 
 def render() -> None:
-    st.title("5. Buscar facturas en el software contable")
+    st.title("4. Buscar facturas en el software contable")
     st.write(
         "Importe la respuesta del software y busque cualquier factura por su número. "
         "Una fila con **Base = 0** se marca como encontrada; las demás pasan a revisión."
@@ -36,6 +37,7 @@ def render() -> None:
     use_generated = st.checkbox(
         "Simular que el software devolvió el mismo archivo plano (todas encontradas, Base 0,00 en líneas sin IVA)",
         value=False,
+        disabled=not bool(st.session_state.plain_text),
     )
 
     if st.button("Cruzar con software contable", type="primary"):
@@ -47,7 +49,7 @@ def render() -> None:
                 df = read_tabular(BytesIO(uploaded.getvalue()), uploaded.name)
                 st.session_state.software_filename = uploaded.name
             else:
-                st.error("Suba un archivo o active la simulación con el plano generado.")
+                st.error("Suba la exportación del software contable para cruzar las facturas.")
                 return
             software_rows = index_software_rows(df)
             st.session_state.software_rows = software_rows
@@ -100,9 +102,10 @@ def render() -> None:
         found_count = sum(result.encontrada for result in st.session_state.match_results.values())
         st.caption(f"Coincidencias con Base = 0: {found_count} de {len(st.session_state.match_results)} facturas.")
 
-    st.subheader("Buscar factura por número")
+    st.subheader("Revisión manual de facturas")
+    st.caption("Busque las facturas DIAN por número o filtre todas sus filas cargadas.")
     search_number = st.text_input(
-        "Número de factura",
+        "Buscar número de factura",
         placeholder="Escriba el número completo o una parte",
         key="software_invoice_search",
     )
@@ -128,3 +131,27 @@ def render() -> None:
         use_container_width=True,
         hide_index=True,
     )
+
+    st.markdown("**Buscar en todas las columnas del Excel contable**")
+    software_query = st.text_input(
+        "Dato de factura, NIT, tercero, valor u otra columna",
+        placeholder="Escriba el dato que desea encontrar",
+        key="software_excel_search",
+    )
+    if software_query.strip():
+        software_matches = search_software_rows(
+            st.session_state.software_rows,
+            software_query,
+        )
+        st.markdown("**Filas coincidentes del software contable**")
+        st.caption(f"Coincidencias encontradas: {len(software_matches)}")
+        if software_matches:
+            st.dataframe(
+                pd.DataFrame(software_matches),
+                use_container_width=True,
+                hide_index=True,
+            )
+        elif not st.session_state.software_rows:
+            st.info("Primero importe y cruce el archivo del software contable.")
+        else:
+            st.info("No hay filas del software contable que coincidan con ese dato.")

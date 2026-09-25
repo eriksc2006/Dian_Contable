@@ -12,12 +12,17 @@ from ui_state import set_step
 
 
 def render() -> None:
-    st.title("4. Generar archivo plano (.TXT / .CSV)")
+    st.title("7. Generar archivo plano final (.TXT / .CSV)")
     st.write(
-        "Exporta el resultado con separador `;`, decimales con coma, fecha "
+        "Con la revisión y validación terminadas, genere el archivo final para cargarlo "
+        "en el software contable. Usa separador `;`, decimales con coma, fecha "
         "`MM/DD/YYYY` y partida doble (`Tipo` 1 débito / 2 crédito)."
     )
     st.code(PLANTILLA_HEADER, language="text")
+
+    if st.session_state.pipeline.steps.get("validacion") != "completed":
+        st.warning("Complete y cierre la Validación final antes de generar el archivo.")
+        return
 
     if not st.session_state.invoices or not st.session_state.classifications:
         st.warning("Clasifique las facturas antes de generar el plano.")
@@ -45,16 +50,12 @@ def render() -> None:
             text = ledger_to_csv_text(lines, mark_base_found=mark_found)
             st.session_state.ledger_lines = lines
             st.session_state.plain_text = text
-            st.session_state.match_results = {}
-            st.session_state.software_rows = []
-            set_step("validacion", "pending")
             stamp = datetime.now().strftime("%Y%m%d_%H%M%S")
             out_csv = settings.exports_dir / f"archivo_plano_{stamp}.csv"
             out_txt = settings.exports_dir / f"archivo_plano_{stamp}.txt"
             write_plain_file(text, out_csv)
             write_plain_file(text, out_txt)
             set_step("archivo_plano", "completed")
-            set_step("software_contable", "attention")
             audit_service.record(
                 st.session_state.pipeline.auditor,
                 "GENERAR_PLANO",

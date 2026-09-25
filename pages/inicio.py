@@ -32,11 +32,10 @@ def render() -> None:
 1. Plataforma web DIAN: reporte **EMITIDAS** o **RECIBIDAS** (.xlsx).
 2. Estructuración inicial según el software contable.
 3. Carga del plan de cuentas (VENTA / COMPRA / COSTOS).
-4. Clasificación y cruzado de facturas.
-5. Generación del archivo plano (`;`, decimales con `,`, fecha `MM/DD/YYYY`).
-6. Integración: columna **Base** en `0,00` como marca de factura encontrada.
-7. Si no se encuentra → revisión humana 1 a 1.
-8. Comprobación manual de valores: `1` transacciones del día / `4` transferencia única.
+4. Clasificación y búsqueda de facturas en el software contable.
+5. Revisión humana de facturas no encontradas o con alertas.
+6. Validación final y comprobación de valores: `1` transacciones del día / `4` transferencia única.
+7. Generación del archivo plano final (`;`, decimales con `,`, fecha `MM/DD/YYYY`) para cargarlo en el software.
         """
     )
 

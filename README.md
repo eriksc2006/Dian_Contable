@@ -57,10 +57,10 @@ La interfaz guía el proceso en 7 pasos y muestra un indicador de avance. El pla
 1. **Cargar reporte DIAN** — Emitidas o Recibidas (.xlsx).
 2. **Procesar facturas** — Normalización (NIT, factura, fechas, valores).
 3. **Clasificar** — Usa el plan cargado automáticamente; cruce y puntaje de confianza.
-4. **Archivo plano** — CSV/TXT según `MODELO PLANTILLA.csv`.
-5. **Software contable** — Cruce; `Base = 0,00` marca factura encontrada.
-6. **HITL** — Solo ítems en `REQUIERE_REVISION` / `ERROR` / no encontradas.
-7. **Validación final** — Marca `1` (día) o `4` (transferencia única) y cierra el proceso.
+4. **Software contable** — Cruce manual; `Base = 0,00` marca factura encontrada.
+5. **HITL** — Solo ítems en `REQUIERE_REVISION` / `ERROR` / no encontradas.
+6. **Validación final** — Marca `1` (día) o `4` (transferencia única) y cierra la revisión.
+7. **Archivo plano final** — Genera el CSV/TXT según `MODELO PLANTILLA.csv` para cargarlo en el software contable.
 
 **Auditoría** y **Configuración** permanecen como accesos opcionales.
 

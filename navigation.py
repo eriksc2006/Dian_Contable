@@ -10,10 +10,10 @@ FLOW_ITEMS = [
     ("cargar_dian", "1. Cargar reporte DIAN"),
     ("procesar", "2. Procesar facturas"),
     ("clasificar", "3. Clasificar facturas"),
-    ("txt", "4. Generar archivo plano"),
-    ("software", "5. Cruzar con software contable"),
-    ("hitl", "6. Revisión humana"),
-    ("validacion", "7. Validación final"),
+    ("software", "4. Cruzar con software contable"),
+    ("hitl", "5. Revisión humana"),
+    ("validacion", "6. Validación final"),
+    ("txt", "7. Generar archivo plano (.TXT / .CSV)"),
 ]
 
 PAGE_STEP_KEYS = {
